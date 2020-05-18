@@ -1,0 +1,112 @@
+go fish game
+
+2 player
+each have 5 cards (radomized from a deck of 52)
+
+cards are randomly dealt to an array for each player
+
+player 1 checks their cards for pairs, auto eliminated
+player 1 checks their cards for pairs, auto eliminated
+note: pair is determined by num/val not the suit
+
+cards are removed from the array and updated
+
+player 1 has x cards left in array
+player 2 has x cards left in array
+
+player 1 goes first and requests a card in their hand needed for a pair
+- if player 2 array does not contain, player 1 takes card random from deck and adds to their hand
+- if there is a match, card removes from player 2, and from player 1 hand arrays.
+count of pairs +1 for player 1
+
+player 2 goes first and requests a card in their hand needed for a pair
+- if player 1 array does not contain, player 2 takes card random from deck and adds to their hand
+- if there is a match, card removes from player 1, and from player 2 hand arrays.
+count of pairs +1 for player 2
+
+variables needed:
+pairsPlayer1
+pairsPlayer1
+
+handPlayer1
+handPlayer2
+
+deckCards
+
+
+
+code for deck of cards:
+
+//card arrays
+var suits = ["spades", "diamonds", "clubs", "hearts"];
+var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+//creates the deck
+function getDeck()
+{
+	var deck = new Array();
+
+	for(var i = 0; i < suits.length; i++)
+	{
+		for(var x = 0; x < values.length; x++)
+		{
+			var card = {Value: values[x], Suit: suits[i]};
+			deck.push(card);
+		}
+	}
+
+	return deck;
+}
+
+//shuffle the cards
+function shuffle(deck)
+{
+	// for 1000 turns
+	// switch the values of two random cards
+	for (var i = 0; i < 1000; i++)
+	{
+		var location1 = Math.floor((Math.random() * deck.length));
+		var location2 = Math.floor((Math.random() * deck.length));
+		var tmp = deck[location1];
+
+		deck[location1] = deck[location2];
+		deck[location2] = tmp;
+	}
+}
+
+//render cards
+function renderDeck(deck)
+{
+      document.getElementById("deck").innerHTML = "";
+
+	for(let i = 0; i < deck.length; i++)
+	{
+		let card = document.createElement("div");
+		let value = document.createElement("div");
+		let suit = document.createElement("div");
+		card.className = "card";
+		value.className = "value";
+		suit.className = "suit " + deck[i].Suit;
+
+		value.innerHTML = deck[i].Value;
+		card.appendChild(value);
+		card.appendChild(suit);
+
+		document.getElementById("deck").appendChild(card);
+	}
+}
+
+
+let numberOfCards = 52;
+let numberOfPlayers = 2;
+let cardsPerPlayer = 8;
+let cardToMatchInput = document.getElementById('cardToMatchInput');
+let cardToMatchValue;
+let resultsContainer = document.getElementById('results');
+let cardsRemaining = document.getElementById('cardsRemaining');
+
+//array Variables
+let cardsArray = [];
+let shuffledArray = [];
+let player1 = [];
+let player2 = [];

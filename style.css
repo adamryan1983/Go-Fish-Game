@@ -1,0 +1,212 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: wheat;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+}
+
+main {
+    background: rgba(181, 209, 116, 0.8);
+    border-radius: 3em;
+    padding: 2rem;
+    display: grid;
+    width: 80%;
+    margin: auto;
+}
+
+/* card player decorations */
+/* #player1, #player2 { */
+    /* font-weight: 500;
+    font-size: 20px; */
+
+.p1score, .p2score {
+    font-size: 2rem;
+    -webkit-animation: glow 1s ease-in-out infinite alternate;
+    -moz-animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+@keyframes glow {
+from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+}
+to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+}
+}
+
+/* Scoreboard styles */
+th, td , table{
+    padding: 15px;
+    margin-left:auto; 
+    margin-right:auto;
+  }
+  thead {
+      font-weight: 700;
+  }
+.content-scoreboard {
+    background: yellowgreen;
+    width: 50%;
+    font-weight: 300;
+    text-align: center;
+    cursor: default;
+}
+
+.content-board {
+    width: 100%;
+    text-align: center;
+}
+
+[class*="content-"] {
+    float: left;
+    padding: 15px;
+    /* border: 1px solid red; */
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+.content-player2hand, .content-player1hand {
+    width: 100%;
+    padding: 1rem;
+    background-color: forestgreen;
+    margin: 1rem 0;
+}
+
+/*  Deck, card, and card area styles*/
+.redCard {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 2.5rem 0rem 2.5rem;;
+    width: 6.5rem;
+    height: 9rem;
+    background: white;
+    color: red;
+    cursor: pointer;
+}
+.blackCard {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 2.5rem 0rem 2.5rem;;
+    width: 6.5rem;
+    height: 9rem;
+    background: white;
+    color: black;
+    cursor: pointer;
+}
+
+.content-deck {
+    width: 50%;
+    background-color: forestgreen;
+}
+.deckStyle {
+    display: inline-block;
+    border: 4px double black;
+    border-radius: 10px;
+    padding: 2.5rem 0rem 2.5rem;
+    color: #ee80b7;
+    width: 6.5rem;
+    height: 9rem;
+    margin: auto;
+    /* background-image: radial-gradient(120deg, #850ae9,#0df0d1); */
+    background-image: radial-gradient( #850ae9,#0df0d1);
+    /* background-image: url(/images/card-bg.jpg); */
+    cursor: default;
+}
+.computerCards {
+    display: inline-block;
+    height: 100%;
+    background-image: radial-gradient( #850ae9,#0df0d1);
+    /* background-image: url(/images/card-bg.jpg); */
+    border: 4px double black;
+    border-radius: 10px;
+    padding: 2.5rem 0rem 2.5rem;;
+    width: 6.5rem;
+    height: 9rem;
+    margin: auto;
+    color: #ee80b7;
+    cursor: default;
+}
+
+.logo {
+   max-width: 100%;
+   height: auto;
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+.buttons {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.btn-new, .btn-deal {
+    background-color: #000000;
+    color: #FFFFFF;
+    padding: 12px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    margin: 10px;
+    width: 100px;
+    height: 50px;
+}
+
+@media only screen and (max-width: 880px ) {
+    .computerCards, .redCard, .blackCard, .deckStyle{
+        display: inline-block;
+        height: 5.5rem;
+        padding: 1.5rem 0rem 1.5rem;
+        width: 4rem;
+        font-size: 0.7rem;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    [class*="content-"] {
+        width: 100%;
+    }
+    .content-right {
+        display: none;
+      }
+
+    .computerCards, .redCard, .blackCard, .deckStyle{
+        height: 5.2rem;
+        padding: 1.5rem 0rem 1.5rem;
+        width: 4rem;
+        font-size: 0.6rem;
+    }
+    .redCard, .blackCard {
+        font-size: 0.9rem;
+    }
+    .logo {
+        width: 60%;
+    }
+    .p1score, .p2score {
+        font-size: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 600px ) {
+    .computerCards, .redCard, .blackCard, .deckStyle{
+        padding: 1.4rem 0rem 1.4rem;
+        width: 3rem;
+        font-size: 0.5rem;
+    }
+    .p1score, .p2score {
+        font-size: 1.6rem;
+    }
+    .redCard, .blackCard {
+        font-size: 1rem;
+    }
+}
