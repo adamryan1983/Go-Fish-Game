@@ -41,7 +41,7 @@ var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 //gets the deck
 function getDeck()
 {
-	let deck = new Array;
+	let deck = [];
 
 	for(let i = 0; i < suits.length; i++)
 	{
@@ -176,9 +176,72 @@ function createDeck() {
     });
     player1cards = cardValPlayer;
     player2cards = cardValComputer;
-
-
 }
+
+//checks for pairs in both hands and removes them when the game starts
+function checkPairs() {
+
+    //remove player duplicates from hand  (fix for three of a kind!)
+    let pairsPlayer = player1cards.filter((e, i, a) => a.indexOf(e) !== i);
+    player1cards = player1cards.filter(item => !pairsPlayer.includes(item));
+    player1 = player1.filter( i => !pairsPlayer.includes( i.Value ) );
+
+    //remove computer pairs from hand 
+    let pairsComp = player2cards.filter((e, i, a) => a.indexOf(e) !== i);
+    player2cards = player2cards.filter(item => !pairsComp.includes(item));
+    player2 = player2.filter( i => !pairsComp.includes( i.Value ) );
+
+    document.getElementById('player1').innerHTML = 'Player 1 Cards' + '<br>';
+    document.getElementById('player2').innerHTML = 'Computer Cards' + '<br>';
+    
+    for (let i = 0; i<player1.length; i++) {
+        let card = document.createElement("div");
+        if (player1[i].Suit == "♠" || player1[i].Suit == "♣") {
+            card.className = 'blackCard';
+        }
+        else {
+            card.className = 'redCard';
+        }
+        card.id = "player1card" + [i]
+        let icon = player1[i].Suit;
+        // cardback.className = 'computerCards'
+        card.innerHTML = player1[i].Value + '<br>' + icon;
+        document.getElementById("player1").appendChild(card);
+        card.style.animation = "flip 1s 1";
+    }
+    for (let i = 0; i < player2.length; i++) {
+        let cardBack = document.createElement("div");
+        let card = document.createElement("div");
+        if (player2[i].Suit == "♠" || player2[i].Suit == "♣") {
+            card.className = 'blackCard';
+        }
+        else {
+            card.className = 'redCard';
+        }
+        card.id = "computercard" + [i]
+        let icon = player2[i].Suit;
+        card.innerHTML = player2[i].Value + '<br>' + icon;
+        document.getElementById("player2").appendChild(card);
+        cardBack.innerHTML = "Vegas Millionaire Suite";
+        cardBack.className = 'computerCards';
+        document.getElementById("player2").appendChild(cardBack);
+        cardBack.style.animation = "flip 1s 1";
+        card.style.animation = "flip 1s 1";
+    }
+    document.querySelector('.p1score').innerHTML = pairsPlayer.length;
+    document.querySelector('.p2score').innerHTML = pairsComp.length;
+}
+
+    //redesign hands for the players with cards minus pairs
+
+
+    // for (let i = 0; i<player1cards.length; i++) {
+    //     let card = document.createElement("div");
+    // }
+    // for (let i = 0; i < 7; i++) {
+    //     let card = document.createElement("div");
+    //     
+
 
 //just a test function right now
 function check() {
@@ -226,16 +289,8 @@ function check() {
             }
 
         }
-        alert(message)
+        alert(message);
     }
-}
-
-//checks for pairs in both hands and removes them when the game starts
-function checkPairs() {
-    console.log(player1cards)
-    // for (let i = 0; i < 7;i++) {
-        
-    // }
 }
 
 window.onload = function() {

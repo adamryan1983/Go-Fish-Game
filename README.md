@@ -1,6 +1,6 @@
 # Go Fish Game
 
-![Screenshot](/images/gofishscreenshot.png);
+![Screenshot](/images/gofishscreenshot.png)
 
  Card game of Go Fish built using Javascript, CSS, and HTML.
 
@@ -28,5 +28,7 @@
 
  ### Tutorials used:
 [Enums](https://www.sohamkamani.com/blog/2017/08/21/enums-in-javascript/)
+
 [Coding a card deck in Javascript](https://www.thatsoftwaredude.com/content/6196/coding-a-card-deck-in-javascript)
+
 [Intro to CSS 3D Transforms](https://3dtransforms.desandro.com/card-flip)
