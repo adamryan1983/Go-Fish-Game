@@ -19,11 +19,6 @@ main {
     margin: auto;
 }
 
-/* card player decorations */
-/* #player1, #player2 { */
-    /* font-weight: 500;
-    font-size: 20px; */
-
 .p1score, .p2score {
     font-size: 2rem;
     -webkit-animation: glow 1s ease-in-out infinite alternate;
@@ -80,18 +75,25 @@ th, td , table{
     margin: 1rem 0;
 }
 
+
+.content-player2hand .blackCard, .content-player2hand .redCard {
+    display: none;
+}
+
 /*  Deck, card, and card area styles*/
 .redCard {
-    display: inline-block;
+    display:inline-block;
     border: 1px solid black;
     border-radius: 10px;
     padding: 2.5rem 0rem 2.5rem;;
     width: 6.5rem;
     height: 9rem;
     background: white;
+    left: -100px;
     color: red;
     cursor: pointer;
 }
+
 .blackCard {
     display: inline-block;
     border: 1px solid black;
@@ -102,6 +104,18 @@ th, td , table{
     background: white;
     color: black;
     cursor: pointer;
+    
+}
+
+/*check this for making animation */
+/* .blackCard:active {
+    -webkit-transform: rotateY( 180deg );
+} */
+
+@keyframes flip {
+    0% {
+      transform: rotateY(180deg);
+    }
 }
 
 .content-deck {
@@ -122,6 +136,7 @@ th, td , table{
     /* background-image: url(/images/card-bg.jpg); */
     cursor: default;
 }
+
 .computerCards {
     display: inline-block;
     height: 100%;
@@ -150,7 +165,7 @@ th, td , table{
     margin-top: 2rem;
 }
 
-.btn-new, .btn-deal {
+.btn-start, .btn-deal {
     background-color: #000000;
     color: #FFFFFF;
     padding: 12px;
