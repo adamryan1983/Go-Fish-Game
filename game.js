@@ -5,7 +5,7 @@ const state = {
     PLAYING: 'playing',
     P1WINS: 'Player 1 Wins!',
     P2WINS: 'Computer Player Winss!',
-    // DRAW: 'draw',
+    DRAW: 'draw',
   }
 let gameState = state.PLAYING;
 
@@ -26,9 +26,33 @@ const gameStart = document.querySelector('.btn-start');
 const gameDeal = document.querySelector('.btn-deal');
 
 //event listeners
-gameStart.addEventListener('click',checkPairs,false);
+gameStart.addEventListener('click',gameBegin,false);
 gameDeal.addEventListener('click',createDeck,false);
+
 // player2[2].addEventListener('click', reveal, false);
+
+
+///////   Code for Modal Window   ///////
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+//get the text from the modal
+var textModal = document.getElementById("modal-text");
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
 
 // function reveal(player1) {
 //     player1[2].className = "computerDeck";
@@ -70,13 +94,14 @@ function shuffle(deck)
     }
 }
 
-
+//assigns card to both players
 function cardAssign(deck) {
     document.getElementById('player1').innerHTML = 'Player 1 Cards' + '<br>';
     document.getElementById('player2').innerHTML = 'Computer Cards' + '<br>';
     player1 = [];
     player2 = [];
 
+    //player cards
     for (let i = 0; i < 7; i++) {
         let card = document.createElement("div");
         player1.push(deck[i]);
@@ -92,19 +117,7 @@ function cardAssign(deck) {
         card.innerHTML = deck[i].Value + '<br>' + icon;
         document.getElementById("player1").appendChild(card);
         deck.shift();
-        // card.style.animation = "flip 1s 1";
-        // with(card.style) {
-        //     // zIndex = "1000";
-        //     // top = "100px";
-        //     // left = "-140px";
-        //     // transform = "rotate(0deg)";
-        //     // zIndex = "30";
-        //     animation-name = 'flip';
-        //     animation-duration: 1s;
-        //     animation-delay =  '.6s';
-        //     left = '90%';
-        //     top = '0';
-        //   }
+
     }
     //computer cards  (player 2 is computer)
     for (let i = 0; i < 7; i++) {
@@ -128,37 +141,99 @@ function cardAssign(deck) {
     }
 }
 
+//main function for the game
+function gameBegin() {
+    checkPairs();
+    gameStart.disabled = true;
+    gameDeal.disabled = true;
+
+    //player with more cards left goes first
+    if (player1.length > player2.length || player1.length === player2.length) {
+        player = 1;
+    }
+    else {
+        player = 2;
+    };
+
+    //loop that continues the game until there is a winner
+    while(gameState === state.PLAYING) {
+        //maybe use while gamestate = playing?
+        pickCard(player);
+        break;
+    };
+    if (gameState === state.P1WINS) {
+        textModal.innerHTML = "Player 1 Wins!!";
+    }
+    else if (gameState === state.P2WINS) {
+        textModal.innerHTML = "Player 2 Wins!!";
+    } 
+    else if(gameState === state.P1WINS) {
+        textModal.innerHTML = "TIE GAME!!!";
+    }
+}
+
+//NA
 function deckRemain(deck) {
     let cardDeck = deck;
 }
 
-//function that lets the player choose a card to pair up
-function pickCard() {
-    console.log("pickCard");
-    let longer = 0;
-    if (player1.length > player2.length) {
-        longer = player1.length;
-    }
-    else {
-        longer = player2.length;
-    }
-    for (let i = 0; i < longer; i++) {
-        console.log(player1[i]);
-    }
-    checkWin();
-    player = 2;
-}
-function checkWin() {
-    console.log("checkWin");
-    if (player1.length == 0) {
-        console.log("player 1 wins")
-        gameState = state.P1WINS;
-    }
-    else {
-        pickCard();
+function addListener(event, obj, fn) {
+    if (obj.addEventListener) {
+        obj.addEventListener(event, fn, false);   // modern browsers
+    } else {
+        obj.attachEvent("on"+event, fn);          // older versions of IE
     }
 }
 
+//function that lets the player choose a card to pair up
+function pickCard(player) {
+    let turn = player === 1 ? "player1header" : "player2header";
+    document.getElementById(turn).innerHTML = "Computer's Turn";
+    textModal.innerHTML = "Player " + player + "'s Turn";
+    modal.style.display = "block";
+
+    if (player === 1) {
+        for (let i = 0; i < player1cards.length; i++) {
+            let element = document.getElementById("player1card" + [i]);
+            let cardValue = player1cards[i];
+            addListener('click', element, function () {
+                check(cardValue);
+            });
+        }
+    }
+
+    console.log(player)
+
+    checkWin();
+    if (player === 1) {
+        player = 2;
+    }
+    else {
+        player = 1;
+    }
+    console.log(player);
+    console.log(gameState);
+
+    return gameState;
+}
+
+//determines if the game is finished
+function checkWin() {
+    console.log("checkWin");
+    if (player1.length === 0) {
+        console.log("player 1 wins")
+        gameState = state.P1WINS;
+    }
+    else if (player2.length === 0) {
+        console.log("player 2 wins")
+        gameState = state.P2WINS;
+    } 
+    else {
+        gameState = state.PLAYING;
+    }
+}
+
+//creates the initial deck
 function createDeck() {
     deck = getDeck(suits,values);
     shuffle(deck);
@@ -194,6 +269,7 @@ function checkPairs() {
     document.getElementById('player1').innerHTML = 'Player 1 Cards' + '<br>';
     document.getElementById('player2').innerHTML = 'Computer Cards' + '<br>';
     
+    //creates the divs for the remaining cards
     for (let i = 0; i<player1.length; i++) {
         let card = document.createElement("div");
         if (player1[i].Suit == "♠" || player1[i].Suit == "♣") {
@@ -231,65 +307,18 @@ function checkPairs() {
     document.querySelector('.p1score').innerHTML = pairsPlayer.length;
     document.querySelector('.p2score').innerHTML = pairsComp.length;
 }
+   
 
-    //redesign hands for the players with cards minus pairs
-
-
-    // for (let i = 0; i<player1cards.length; i++) {
-    //     let card = document.createElement("div");
-    // }
-    // for (let i = 0; i < 7; i++) {
-    //     let card = document.createElement("div");
-    //     
-
-
-//just a test function right now
-function check() {
-    var message;
-    var a = document.getElementById("player1card0");
-    var b = document.getElementById("player1card1");
-    var c = document.getElementById("player1card2");
-    
-    a.onclick = function() {
-        console.log(player1[0].Value);
-        for (let i = 0; i <7; i++) {
-            console.log(player2[i].Value)
-            if (player1[0].Value === player2[i].Value) {
-                message = "yes"
-                break;
-            }
-            else {
-                message = "no";
-            }
-
+function check(cardValue) {
+    console.log("reveal both hands for testing")
+    console.log(player1cards)
+    console.log(player2cards)
+    //checks the computer hand for a card to make a pair
+    for( let i = 0; i < player2cards.length; i++) {
+        if (cardValue === player2cards[i]) {
+            alert("we have a match")
+            break;
         }
-        alert(message)
-    }
-    b.onclick = function() {
-        for (let i = 0; i <7; i++) {
-            if (player1[1].Value === player2[i].Value) {
-                message = "yes"
-                break;
-            }
-            else {
-                message = "no";
-            }
-
-        }
-        alert(message)
-    }
-    c.onclick = function() {
-        for (let i = 0; i <7; i++) {
-            if (player1[2].Value === player2[i].Value) {
-                message = "yes"
-                break;
-            }
-            else {
-                message = "no";
-            }
-
-        }
-        alert(message);
     }
 }
 
