@@ -1,7 +1,5 @@
 # Go Fish Game
 
-![Screenshot](/images/gofishscreenshot.png)
-
  Card game of Go Fish built using Javascript, CSS, and HTML.
 
  This game is being built/maintained as part of a college programming course.
