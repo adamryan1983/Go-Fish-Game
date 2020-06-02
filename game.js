@@ -235,7 +235,7 @@ function checkWin() {
 
 //creates the initial deck
 function createDeck() {
-    deck = getDeck(suits,values);
+    let deck = getDeck(suits,values);
     shuffle(deck);
     cardAssign(deck);
     gameState = state.PLAYING;
