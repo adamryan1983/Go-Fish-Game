@@ -202,6 +202,7 @@ function pickCard(player) {
     
     console.log(player)
 
+
     checkWin();
     if (player === 1) {
         player = 2;
@@ -261,8 +262,8 @@ function computerAI() {
         if (randomSelection === player1cards[i]) {
             match = true;
             console.log("reveal both hands for testing")
-            console.log(player1cards)
-            console.log(player2cards)
+            console.log(player1cards);
+            console.log(player2cards);
             cardToRemove = player1cards[i];
             player2cards.splice( player2cards.indexOf(cardToRemove), 1 );
             player1cards.splice( player1cards.indexOf(cardToRemove), 1 );
@@ -285,7 +286,7 @@ function computerAI() {
             break;
         }
     }
-    if (!match) {
+    if (!match &&  modal.style.display === "none") {
         alert("no match on that selection");
     }
 }
@@ -337,12 +338,12 @@ function createDeck() {
 function checkPairs(player, playercards) {
 
     //remove player duplicates from hand  (fix for three of a kind!)
-    pairsPlayer = player1cards.filter((e, i, a) => a.indexOf(e) !== i);
+    let pairsPlayer = player1cards.filter((e, i, a) => a.indexOf(e) !== i);
     player1cards = player1cards.filter(item => !pairsPlayer.includes(item));
     player1 = player1.filter( i => !pairsPlayer.includes( i.Value ) );
 
     //remove computer pairs from hand 
-    pairsComp = player2cards.filter((e, i, a) => a.indexOf(e) !== i);
+    let pairsComp = player2cards.filter((e, i, a) => a.indexOf(e) !== i);
     player2cards = player2cards.filter(item => !pairsComp.includes(item));
     player2 = player2.filter( i => !pairsComp.includes( i.Value ) );
 
@@ -353,6 +354,10 @@ function checkPairs(player, playercards) {
     document.querySelector('.p2score').innerHTML = pairsComp.length;
 
     createDivCards(player1,player2);
+
+    // if (modal.style.display = "none") {
+    //     createDivCards(player1,player2);
+    // }
 }
 function createDivCards(player1,player2) {
 
@@ -395,9 +400,4 @@ function createDivCards(player1,player2) {
         cardBack.style.animation = "flip 1s 1";
         card.style.animation = "flip 1s 1";
     }
-}
-
-
-window.onload = function() {
-    // this.createDeck(deck);
 }
