@@ -10,11 +10,9 @@ const state = {
 let gameState = state.PLAYING;
 
 let cardToMatchInput = document.getElementById('cardToMatchInput');
-let cardToMatchValue;
 let resultsContainer = document.getElementById('results');
 let cardsRemaining = document.getElementById('cardsRemaining');
-let player = 1;
-let player1cards, player2cards, pairsPlayer, pairsComp;
+let player1cards, player2cards, pairsPlayer, pairsComp, player, cardToMatchValue;
 
 //array Variables
 let cardsArray = [];
@@ -141,9 +139,9 @@ function cardAssign(deck) {
 
 //main function for the game
 function gameBegin() {
-    checkPairs();
     gameStart.disabled = true;
     gameDeal.disabled = true;
+    checkPairs();
 
     //player with more cards left goes first
     if (player1.length > player2.length || player1.length === player2.length) {
@@ -152,13 +150,22 @@ function gameBegin() {
     else {
         player = 2;
     };
-
+    
+    console.log(player)
     //loop that continues the game until there is a winner
-    while(gameState === state.PLAYING) {
+    while(gameState = state.PLAYING) {
         //maybe use while gamestate = playing?
         pickCard(player);
+        checkWin();
+        if (player === 1) {
+            player = 2;
+        }
+        else {
+            player = 1;
+        }
+        console.log(player);
         break;
-    };
+    }
     if (gameState === state.P1WINS) {
         textModal.innerHTML = "Player 1 Wins!!";
     }
@@ -182,7 +189,7 @@ function addListener(event, obj, fn) {
 //function that lets the player choose a card to pair up
 function pickCard(player) {
     let turn = player === 1 ? "player1header" : "player2header";
-    document.getElementById(turn).innerHTML = "Computer's Turn";
+    document.getElementById(turn).innerHTML = "Go!";
     textModal.innerHTML = "Player " + player + "'s Turn";
     modal.style.display = "block";
 
@@ -192,40 +199,21 @@ function pickCard(player) {
             let cardValue = player1cards[i];
             addListener('click', element, function () {
                 playerCheckCard(cardValue);
-            });
+            })
         }
     }
     else if(player === 2) {
         console.log("player 2 turn bro");
         computerAI();
     }
-    
-    console.log(player)
-
-
-    checkWin();
-    if (player === 1) {
-        player = 2;
-    }
-    else {
-        player = 1;
-    }
-    console.log(player);
-    console.log(gameState);
-
-    return gameState;
+    document.getElementById(turn).innerHTML = "Player " + player;
 }
 
 //Player function that checks to see if the selected card (cardValue) is a match
 function playerCheckCard(cardValue) {
     let cardToRemove;
     let i = deck.length;
-    console.log(i);
-    console.log("reveal both hands")
-    console.log(player1cards)
-    console.log(player1)
-    console.log(player2cards)
-    console.log(player2)
+    console.log(deck.length)
 
     //checks the computer hand for a card to make a pair
     for( let i = 0; i < player2cards.length; i++) {
@@ -235,9 +223,6 @@ function playerCheckCard(cardValue) {
             player2cards.splice( player2cards.indexOf(cardToRemove), 1 );
             player1.splice( player1.indexOf(cardToRemove), 1 );
             player2.splice( player2.indexOf(cardToRemove), 1 );
-
-            //redraw card hands
-            createDivCards(player1,player2);
             break;
         }
         else {
@@ -245,57 +230,50 @@ function playerCheckCard(cardValue) {
             player1cards.push(newCard)
             player1.push(newCard)
             document.getElementById("remaining-deck").innerHTML = "Remaining Deck:" + deck.length;
-            checkPairs();
-            createDivCards(player1,player2);
             break;
         }
     }
+
+    //redraw card hands
+    createDivCards(player1,player2);
+    console.log(deck.length)
 }
 
 //Computer AI for selecting a random card to pair
 function computerAI() {
     let randomSelection = player2cards[Math.floor(Math.random()*player2cards.length)];
-    console.log(randomSelection);
     let match = false;
     let cardToRemove;
     for( let i = 0; i < player1cards.length; i++) {
         if (randomSelection === player1cards[i]) {
             match = true;
-            console.log("reveal both hands for testing")
-            console.log(player1cards);
-            console.log(player2cards);
+
             cardToRemove = player1cards[i];
             player2cards.splice( player2cards.indexOf(cardToRemove), 1 );
             player1cards.splice( player1cards.indexOf(cardToRemove), 1 );
             player2.splice( player2.indexOf(cardToRemove), 1 );
-            player1.splice( player1.indexOf(cardToRemove), 1 );
-            createDivCards(player1,player2)
-
-            console.log("reveal both hands to see change")
-            console.log(player1cards)
-            console.log(player2cards)
             break;
+
         }
         else {
             let newCard = deck.pop();
             player2cards.push(newCard)
             player2.push(newCard)
             document.getElementById("remaining-deck").innerHTML = "Remaining Deck:" + deck.length;
-            checkPairs();
-            createDivCards(player1,player2);
             break;
         }
     }
-    if (!match &&  modal.style.display === "none") {
-        alert("no match on that selection");
+    if (!match) {
+        // alert("no match on that selection");
+        console.log("no match on that selection");
+        console.log(deck.length);
     }
+    createDivCards(player1,player2);
 }
-
-
 
 //determines if the game is finished
 function checkWin() {
-    console.log("checkWin");
+    console.log("checking Win");
     if (player1.length === 0) {
         console.log("player 1 wins")
         gameState = state.P1WINS;
@@ -335,8 +313,8 @@ function createDeck() {
 //
 //
 
-function checkPairs(player, playercards) {
-
+function checkPairs() {
+    console.log("checking for pairs")
     //remove player duplicates from hand  (fix for three of a kind!)
     let pairsPlayer = player1cards.filter((e, i, a) => a.indexOf(e) !== i);
     player1cards = player1cards.filter(item => !pairsPlayer.includes(item));
@@ -355,9 +333,6 @@ function checkPairs(player, playercards) {
 
     createDivCards(player1,player2);
 
-    // if (modal.style.display = "none") {
-    //     createDivCards(player1,player2);
-    // }
 }
 function createDivCards(player1,player2) {
 
