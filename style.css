@@ -49,6 +49,7 @@ th, td , table{
     font-weight: 300;
     text-align: center;
     cursor: default;
+    height: 15.2rem;
 }
 
 .content-board {
@@ -120,6 +121,7 @@ th, td , table{
 
 .content-deck {
     width: 50%;
+    height: 15.2rem;
     background-color: forestgreen;
 }
 .deckStyle {
@@ -129,8 +131,8 @@ th, td , table{
     padding: 2.5rem 0rem 2.5rem;
     color: #ee80b7;
     width: 6.5rem;
-    height: 9rem;
     margin: auto;
+    height: 9rem;
     /* background-image: radial-gradient(120deg, #850ae9,#0df0d1); */
     background-image: radial-gradient( #850ae9,#0df0d1);
     /* background-image: url(/images/card-bg.jpg); */
@@ -228,6 +230,12 @@ th, td , table{
         width: 4rem;
         font-size: 0.7rem;
     }
+    .content-deck {
+        height: 12rem;
+    }
+    .content-scoreboard {
+        height: 12rem;
+    }
 }
 
 @media only screen and (max-width: 768px) {
@@ -239,7 +247,7 @@ th, td , table{
       }
 
     .computerCards, .redCard, .blackCard, .deckStyle{
-        height: 5.2rem;
+        height: auto;
         padding: 1.5rem 0rem 1.5rem;
         width: 4rem;
         font-size: 0.6rem;
@@ -253,6 +261,12 @@ th, td , table{
     .p1score, .p2score {
         font-size: 1.5rem;
     }
+    .content-deck {
+        height: 12rem;
+    }
+    .content-scoreboard {
+        height: 12rem;
+    }
 }
 
 @media only screen and (max-width: 600px ) {
@@ -260,11 +274,18 @@ th, td , table{
         padding: 1.4rem 0rem 1.4rem;
         width: 3rem;
         font-size: 0.5rem;
+        height: auto;
     }
     .p1score, .p2score {
         font-size: 1.6rem;
     }
     .redCard, .blackCard {
         font-size: 1rem;
+    }
+    .content-deck {
+        height: 12rem;
+    }
+    .content-scoreboard {
+        height: 12rem;
     }
 }

@@ -13,6 +13,7 @@ let cardToMatchInput = document.getElementById('cardToMatchInput');
 let resultsContainer = document.getElementById('results');
 let cardsRemaining = document.getElementById('cardsRemaining');
 let player1cards, player2cards, pairsPlayer, pairsComp, player, cardToMatchValue;
+let statusBlock = document.querySelector('.statusBlock')
 
 //array Variables
 let cardsArray = [];
@@ -25,7 +26,7 @@ let player2 = [];
 const gameStart = document.querySelector('.btn-start');
 const gameDeal = document.querySelector('.btn-deal');
     //event listeners for the buttons
-gameStart.addEventListener('click',gameBegin,false);
+
 gameDeal.addEventListener('click',createDeck,false);
 
 ///////   Code for Modal Window   ///////
@@ -91,10 +92,9 @@ function shuffle(deck)
 
 //assigns card to both players
 function cardAssign(deck) {
+    gameStart.addEventListener('click',gameBegin,false);
     document.getElementById('player1').innerHTML = 'Player 1 Cards' + '<br>';
     document.getElementById('player2').innerHTML = 'Computer Cards' + '<br>';
-    // player1 = [];
-    // player2 = [];
 
     //player cards
     for (let i = 0; i < 7; i++) {
@@ -112,8 +112,8 @@ function cardAssign(deck) {
         card.innerHTML = deck[i].Value + '<br>' + icon;
         document.getElementById("player1").appendChild(card);
         deck.shift();
-
     }
+
     //computer cards  (player 2 is computer)
     for (let i = 0; i < 7; i++) {
         let cardBack = document.createElement("div");
@@ -141,6 +141,8 @@ function cardAssign(deck) {
 function gameBegin() {
     gameStart.disabled = true;
     gameDeal.disabled = true;
+
+    //removes initial pairs at the start
     checkPairs();
 
     //player with more cards left goes first
@@ -149,23 +151,26 @@ function gameBegin() {
     }
     else {
         player = 2;
+        
     };
-    
-    console.log(player)
-    //loop that continues the game until there is a winner
-    while(gameState = state.PLAYING) {
-        //maybe use while gamestate = playing?
-        pickCard(player);
-        checkWin();
-        if (player === 1) {
-            player = 2;
-        }
-        else {
-            player = 1;
-        }
-        console.log(player);
-        break;
-    }
+    switch (player) {
+        case 1:
+            textModal.innerHTML = "Player " + player + "'s Turn";
+            modal.style.display = "block";
+            console.log("player 1 go!");
+            pickCard(player);
+            break;
+        case 2:
+            textModal.innerHTML = "Player " + player + "'s Turn";
+            modal.style.display = "block";
+            console.log("player 2 go!");
+            setTimeout(function(){ pickCard(player) }, 2000);
+            break;
+        default:
+            console.log("something went wrong");
+            break;
+      }
+
     if (gameState === state.P1WINS) {
         textModal.innerHTML = "Player 1 Wins!!";
     }
@@ -190,8 +195,6 @@ function addListener(event, obj, fn) {
 function pickCard(player) {
     let turn = player === 1 ? "player1header" : "player2header";
     document.getElementById(turn).innerHTML = "Go!";
-    textModal.innerHTML = "Player " + player + "'s Turn";
-    modal.style.display = "block";
 
     if (player === 1) {
         for (let i = 0; i < player1cards.length; i++) {
@@ -203,72 +206,104 @@ function pickCard(player) {
         }
     }
     else if(player === 2) {
-        console.log("player 2 turn bro");
-        computerAI();
+        setTimeout(computerAI,4000);
     }
     document.getElementById(turn).innerHTML = "Player " + player;
 }
 
 //Player function that checks to see if the selected card (cardValue) is a match
 function playerCheckCard(cardValue) {
-    let cardToRemove;
-    let i = deck.length;
-    console.log(deck.length)
+    let cardIndex;
+    let match = false;
 
     //checks the computer hand for a card to make a pair
     for( let i = 0; i < player2cards.length; i++) {
         if (cardValue === player2cards[i]) {
-            cardToRemove = player2cards[i];
-            player1cards.splice( player1cards.indexOf(cardToRemove), 1 );
-            player2cards.splice( player2cards.indexOf(cardToRemove), 1 );
-            player1.splice( player1.indexOf(cardToRemove), 1 );
-            player2.splice( player2.indexOf(cardToRemove), 1 );
+            match = true;
+            cardIndex = player1cards.indexOf(cardValue)
+            console.log("index is # " + cardIndex)
+            player1cards.splice( cardIndex, 1 );
+            player2cards.splice( i, 1 );
+            player1.splice( cardIndex, 1 );
+            player2.splice( i, 1 );
+            console.log("Pair made!")
             break;
         }
         else {
-            let newCard = deck.pop();
-            player1cards.push(newCard)
-            player1.push(newCard)
-            document.getElementById("remaining-deck").innerHTML = "Remaining Deck:" + deck.length;
-            break;
+            match = false;
         }
     }
-
+    if (!match) {
+        console.log("no match for player choice")
+        let newCard = deck.pop();
+        console.log("new card added is " + newCard.Value)
+        player1cards.push(newCard.Value);
+        player1.push(newCard);
+        document.getElementById("remaining-deck").innerHTML = "Remaining Deck:" + deck.length;
+    }
     //redraw card hands
-    createDivCards(player1,player2);
+    checkPairs();
+    console.log(player1cards);
+    console.log(player2cards);
     console.log(deck.length)
+    if (player === 1) {
+        player = 2;
+        textModal.innerHTML = "Player " + player + "'s Turn";
+        modal.style.display = "block";
+        setTimeout(checkWin,1000);
+        setTimeout(function(){ pickCard( player) }, 3000);
+    }
+    else {
+        player = 1;
+        textModal.innerHTML = "Player " + player + "'s Turn";
+        modal.style.display = "block";
+        setTimeout(checkWin,1000);
+        pickCard(player);
+    }
 }
 
 //Computer AI for selecting a random card to pair
 function computerAI() {
     let randomSelection = player2cards[Math.floor(Math.random()*player2cards.length)];
     let match = false;
-    let cardToRemove;
+    let cardIndex;
     for( let i = 0; i < player1cards.length; i++) {
         if (randomSelection === player1cards[i]) {
+            cardIndex = player2cards.indexOf(randomSelection)
             match = true;
-
-            cardToRemove = player1cards[i];
-            player2cards.splice( player2cards.indexOf(cardToRemove), 1 );
-            player1cards.splice( player1cards.indexOf(cardToRemove), 1 );
-            player2.splice( player2.indexOf(cardToRemove), 1 );
+            player2cards.splice( cardIndex, 0 );
+            player1cards.splice( i, 0 );
+            player2.splice( cardIndex, 0 );
+            player1.splice( i, 0 );
+            console.log("Pair made!")
             break;
-
         }
         else {
-            let newCard = deck.pop();
-            player2cards.push(newCard)
-            player2.push(newCard)
-            document.getElementById("remaining-deck").innerHTML = "Remaining Deck:" + deck.length;
-            break;
+            match = false;
         }
     }
     if (!match) {
         // alert("no match on that selection");
-        console.log("no match on that selection");
-        console.log(deck.length);
+        let newCard = deck.pop();
+        player2cards.push(newCard.Value)
+        player2.push(newCard)
+        document.getElementById("remaining-deck").innerHTML = "Remaining Deck:" + deck.length;
+        console.log("no match on that selection for computer");
     }
-    createDivCards(player1,player2);
+    checkPairs();
+    checkWin();
+    if (player === 2) {
+        player = 1;
+        textModal.innerHTML = "Player " + player + "'s Turn";
+        modal.style.display = "block";
+        pickCard(player);
+    }
+    else {
+        player = 2;
+        textModal.innerHTML = "Player " + player + "'s Turn";
+        modal.style.display = "block";
+        setTimeout(function(){ pickCard( player) }, 3000);
+    }
 }
 
 //determines if the game is finished
@@ -277,10 +312,14 @@ function checkWin() {
     if (player1.length === 0) {
         console.log("player 1 wins")
         gameState = state.P1WINS;
+        alert("Congrats, you won!")
+        gameDeal.disabled = false;
     }
     else if (player2.length === 0) {
         console.log("player 2 wins")
         gameState = state.P2WINS;
+        alert("Game over, Computer wins")
+        gameDeal.disabled = false;
     } 
     else {
         gameState = state.PLAYING;
@@ -307,21 +346,16 @@ function createDeck() {
     player2cards = cardValComputer;
 }
 
-//checks for pairs in both hands and removes them when the game starts
-// this function is going to need to be fixed up. Maybe pass in player and make it work for an
-//player. It needs to work when new cards are added
-//
-//
-
+//checks for pairs in both hands and removes them
 function checkPairs() {
     console.log("checking for pairs")
     //remove player duplicates from hand  (fix for three of a kind!)
-    let pairsPlayer = player1cards.filter((e, i, a) => a.indexOf(e) !== i);
+    pairsPlayer = player1cards.filter((e, i, a) => a.indexOf(e) !== i);
     player1cards = player1cards.filter(item => !pairsPlayer.includes(item));
     player1 = player1.filter( i => !pairsPlayer.includes( i.Value ) );
 
     //remove computer pairs from hand 
-    let pairsComp = player2cards.filter((e, i, a) => a.indexOf(e) !== i);
+    pairsComp = player2cards.filter((e, i, a) => a.indexOf(e) !== i);
     player2cards = player2cards.filter(item => !pairsComp.includes(item));
     player2 = player2.filter( i => !pairsComp.includes( i.Value ) );
 
@@ -331,11 +365,17 @@ function checkPairs() {
     document.querySelector('.p1score').innerHTML = pairsPlayer.length;
     document.querySelector('.p2score').innerHTML = pairsComp.length;
 
+    if (pairsPlayer > 0 || pairsComp > 0) {
+        console.log("pairs were removed")
+    }
+    console.log(player1)
+    console.log(player1cards)
     createDivCards(player1,player2);
 
 }
-function createDivCards(player1,player2) {
 
+function createDivCards(player1,player2) {
+    console.log("Computer Hand: " + player2cards)
     //reset player hands on screen
     document.getElementById('player1').innerHTML = 'Player 1 Cards' + '<br>';
     document.getElementById('player2').innerHTML = 'Computer Cards' + '<br>';
